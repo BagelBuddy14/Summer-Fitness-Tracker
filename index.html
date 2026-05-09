@@ -1,1 +1,469 @@
+<!DOCTYPE html>
 
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  
+<style>
+.sf-wrap{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#faf8f4;min-height:600px;position:relative;overflow:hidden;}
+.sf-hdr{background:#3d5c41;padding:36px 18px 16px;position:relative;overflow:hidden;}
+.sf-hdr::before{content:'';position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.05);}
+.sf-hlbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#b8d4bb;margin-bottom:4px;font-weight:600;}
+.sf-htitle{font-size:24px;font-weight:700;color:#fff;line-height:1.1;font-style:italic;}
+.sf-hdates{margin-top:12px;display:flex;gap:6px;align-items:center;}
+.sf-hpill{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 10px;font-size:11px;color:#fff;}
+.sf-prog{background:#3d5c41;padding:2px 18px 16px;}
+.sf-pbg{background:rgba(255,255,255,0.12);border-radius:4px;height:6px;margin-top:8px;}
+.sf-pfill{height:6px;border-radius:4px;background:linear-gradient(90deg,#b8d4bb,#d4edba);transition:width .5s;width:0%;}
+.sf-plbls{display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:#b8d4bb;opacity:.75;}
+.sf-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 12px 6px;}
+.sf-scard{background:#fff9f5;border:1px solid rgba(122,158,126,0.22);border-radius:12px;padding:10px 8px;text-align:center;}
+.sf-sval{font-size:20px;font-weight:700;color:#3d5c41;}
+.sf-slbl{font-size:9px;color:#a39690;margin-top:2px;text-transform:uppercase;letter-spacing:.05em;}
+.sf-pnav{display:flex;gap:6px;padding:6px 12px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.sf-pnav::-webkit-scrollbar{display:none;}
+.sf-ppill{flex-shrink:0;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1.5px solid rgba(122,158,126,0.22);background:#fff9f5;color:#6b5e58;cursor:pointer;white-space:nowrap;}
+.sf-ppill.on{background:#3d5c41;border-color:#3d5c41;color:#fff;}
+.sf-wlist{padding:0 12px;}
+.sf-wcard{background:#fff9f5;border:1px solid rgba(122,158,126,0.22);border-radius:16px;margin-bottom:10px;overflow:hidden;}
+.sf-wcard.curwk{border:1.5px solid #7a9e7e;box-shadow:0 0 0 3px rgba(122,158,126,0.12);}
+.sf-whdr{display:flex;align-items:center;gap:10px;padding:12px;cursor:pointer;-webkit-user-select:none;user-select:none;}
+.sf-badge{width:38px;height:38px;border-radius:10px;background:#eef4ef;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
+.sf-badge.doneb{background:#3d5c41;}
+.sf-badge.curb{background:#fdf1ec;}
+.sf-bnlbl{font-size:8px;color:#a39690;text-transform:uppercase;letter-spacing:.04em;}
+.sf-bnval{font-size:15px;font-weight:700;color:#3d5c41;line-height:1;}
+.sf-badge.doneb .sf-bnval,.sf-badge.doneb .sf-bnlbl{color:#fff;}
+.sf-badge.curb .sf-bnval{color:#c97b5a;}
+.sf-winfo{flex:1;min-width:0;}
+.sf-wtitle{font-size:12px;font-weight:600;color:#2a2420;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sf-wsub{font-size:10px;color:#a39690;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sf-wdots{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;}
+.sf-wdot{width:6px;height:6px;border-radius:50%;background:#eef4ef;border:1px solid #b8d4bb;}
+.sf-wdot.on{background:#7a9e7e;border-color:#3d5c41;}
+.sf-wchev{font-size:16px;color:#a39690;transition:transform .2s;flex-shrink:0;}
+.sf-wcard.open .sf-wchev{transform:rotate(180deg);}
+.sf-wbody{display:none;border-top:1px solid rgba(122,158,126,0.22);}
+.sf-wcard.open .sf-wbody{display:block;}
+.sf-gbanner{background:#eef4ef;padding:10px 14px;border-bottom:1px solid rgba(122,158,126,0.22);}
+.sf-glbl{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#3d5c41;font-weight:600;margin-bottom:2px;}
+.sf-gtxt{font-style:italic;font-size:13px;color:#3d5c41;line-height:1.4;font-weight:500;}
+.sf-ctag{display:inline-block;font-size:9px;padding:2px 8px;border-radius:10px;background:#fdf1ec;color:#c97b5a;margin-top:5px;font-weight:600;}
+.sf-tsec{padding:10px 14px;}
+.sf-tlbl{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#a39690;font-weight:600;margin-bottom:8px;}
+.sf-titem{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px solid rgba(122,158,126,0.1);cursor:pointer;-webkit-user-select:none;user-select:none;}
+.sf-titem:last-child{border-bottom:none;}
+.sf-titem.done .sf-ttxt{text-decoration:line-through;color:#a39690;}
+.sf-tdot{width:5px;height:5px;border-radius:50%;margin-top:8px;flex-shrink:0;}
+.sf-tchk{width:20px;height:20px;border-radius:6px;border:1.5px solid #b8d4bb;background:transparent;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .2s;}
+.sf-titem.done .sf-tchk{background:#3d5c41;border-color:#3d5c41;}
+.sf-ckicon{display:none;color:#fff;font-size:13px;font-weight:700;}
+.sf-titem.done .sf-ckicon{display:block;}
+.sf-tcont{flex:1;}
+.sf-ttxt{font-size:12px;color:#2a2420;line-height:1.4;}
+.sf-tstxt{font-size:10px;color:#a39690;margin-top:2px;line-height:1.35;}
+.sf-bnav{display:flex;border-top:1px solid rgba(122,158,126,0.22);background:rgba(250,248,244,0.97);padding:8px 0 4px;margin-top:16px;}
+.sf-nbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 0;}
+.sf-nicon{font-size:20px;opacity:.4;}
+.sf-nbtn.on .sf-nicon{opacity:1;}
+.sf-nlbl{font-size:10px;color:#a39690;}
+.sf-nbtn.on .sf-nlbl{color:#3d5c41;font-weight:600;}
+.sf-jhdr{background:#3d5c41;padding:36px 18px 18px;}
+.sf-jtitle{font-size:22px;font-weight:700;font-style:italic;color:#fff;}
+.sf-jsub{font-size:11px;color:#b8d4bb;margin-top:3px;opacity:.85;}
+.sf-jlist{padding:12px;}
+.sf-ncard{background:#fff9f5;border:1px solid rgba(122,158,126,0.22);border-radius:12px;margin-bottom:9px;overflow:hidden;}
+.sf-ntop{padding:9px 12px 0;display:flex;justify-content:space-between;align-items:center;}
+.sf-ndate{font-size:10px;color:#a39690;font-weight:500;}
+.sf-ndel{font-size:18px;color:#a39690;cursor:pointer;padding:2px 6px;line-height:1;}
+.sf-textarea{width:100%;padding:7px 12px 12px;border:none;background:transparent;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:12px;color:#2a2420;resize:none;outline:none;min-height:54px;}
+.sf-addbtn{display:block;margin:0 12px 12px;width:calc(100% - 24px);padding:12px;background:#3d5c41;color:#fff;border:none;border-radius:12px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
+.sf-thdr{background:#c97b5a;padding:36px 18px 18px;}
+.sf-ttitle{font-size:22px;font-weight:700;font-style:italic;color:#fff;}
+.sf-tlist{padding:12px;}
+.sf-tipcard{background:#fff9f5;border:1px solid rgba(122,158,126,0.22);border-radius:12px;padding:12px;margin-bottom:9px;}
+.sf-tipcat{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#c97b5a;font-weight:600;margin-bottom:4px;}
+.sf-tiptxt{font-size:12px;color:#2a2420;line-height:1.6;}
+.sf-aview{display:none;}
+.sf-aview.on{display:block;}
+@keyframes sfcf{0%{opacity:1;transform:translateY(0) rotate(0deg);}100%{opacity:0;transform:translateY(300px) rotate(540deg);}}
+.sf-cfp{position:fixed;width:7px;height:7px;border-radius:2px;pointer-events:none;z-index:9999;animation:sfcf 1.1s ease-in forwards;}
+</style>
+
+<div class="sf-wrap">
+<div class="sf-aview on" id="sv-plan">
+  <div class="sf-hdr">
+    <div class="sf-hlbl">Your summer arc</div>
+    <div class="sf-htitle">Summer Fitness Plan</div>
+    <div class="sf-hdates">
+      <div class="sf-hpill">May 8, 2026</div>
+      <span style="color:#b8d4bb;font-size:13px;margin:0 2px;">→</span>
+      <div class="sf-hpill">Aug 14, 2026</div>
+    </div>
+  </div>
+  <div class="sf-prog">
+    <div class="sf-pbg"><div class="sf-pfill" id="sf-pf"></div></div>
+    <div class="sf-plbls"><span id="sf-pp">0% complete</span><span id="sf-pc">0 tasks done</span></div>
+  </div>
+  <div class="sf-stats">
+    <div class="sf-scard"><div class="sf-sval">14</div><div class="sf-slbl">Weeks</div></div>
+    <div class="sf-scard"><div class="sf-sval" id="sf-sc">0</div><div class="sf-slbl">Checked off</div></div>
+    <div class="sf-scard"><div class="sf-sval" id="sf-ss">0</div><div class="sf-slbl">Wk streak</div></div>
+  </div>
+  <div class="sf-pnav" id="sf-pnav">
+    <div class="sf-ppill on" onclick="sfph('all',this)">All weeks</div>
+    <div class="sf-ppill" onclick="sfph('1',this)">Phase 1 · Foundation</div>
+    <div class="sf-ppill" onclick="sfph('2',this)">Phase 2 · Build</div>
+    <div class="sf-ppill" onclick="sfph('3',this)">Phase 3 · Peak</div>
+  </div>
+  <div class="sf-wlist" id="sf-wl"></div>
+</div>
+<div class="sf-aview" id="sv-journal">
+  <div class="sf-jhdr"><div class="sf-jtitle">Workout Journal</div><div class="sf-jsub">What did you do? How did you feel?</div></div>
+  <div class="sf-jlist" id="sf-jl"><div style="padding:24px;text-align:center;color:#a39690;font-size:12px;">No entries yet. Add your first one below.</div></div>
+  <button class="sf-addbtn" onclick="sfAddNote()">+ Add entry</button>
+</div>
+<div class="sf-aview" id="sv-tips">
+  <div class="sf-thdr"><div class="sf-ttitle">Reminders &amp; Motivation</div></div>
+  <div class="sf-tlist" id="sf-tips-list"></div>
+</div>
+<div class="sf-bnav">
+  <div class="sf-nbtn on" onclick="sfTab('plan',this)" id="nb-plan"><div class="sf-nicon">📋</div><div class="sf-nlbl">Plan</div></div>
+  <div class="sf-nbtn" onclick="sfTab('journal',this)" id="nb-journal"><div class="sf-nicon">📓</div><div class="sf-nlbl">Journal</div></div>
+  <div class="sf-nbtn" onclick="sfTab('tips',this)" id="nb-tips"><div class="sf-nicon">✨</div><div class="sf-nlbl">Reminders</div></div>
+</div>
+</div>
+
+<script>
+var SFW=[
+  {n:1,ph:'1',d:'May 8–14',t:'Just show up',g:'Move 4 days. Consistency over intensity — just get started.',c:'Home · mat · trails',tasks:[
+    {id:'1a',ty:'cardio',tx:'20 min walk (Fri May 8)',sx:'Easy pace, just move'},
+    {id:'1b',ty:'class',tx:'Beginner pilates 20 min (Sat)',sx:'YouTube follow-along on your mat'},
+    {id:'1c',ty:'cardio',tx:'Walk/jog intervals 25 min (Mon)',sx:'2 min walk, 1 min jog — alternate'},
+    {id:'1d',ty:'class',tx:'Pilates 20 min — core & flexibility (Tue)',sx:''},
+    {id:'1e',ty:'cardio',tx:'Trail walk or hike 30 min (Thu)',sx:'No pressure, enjoy it'},
+    {id:'1f',ty:'habit',tx:'Write one word in journal after each workout',sx:'Just how you felt — nothing more'},
+  ]},
+  {n:2,ph:'1',d:'May 15–21',t:'Add a little more',g:'5 active days. Longer jog intervals + one real hike.',c:'Home · mat · trails',tasks:[
+    {id:'2a',ty:'cardio',tx:'Walk/jog 30 min (Mon)',sx:'Push jog intervals slightly longer'},
+    {id:'2b',ty:'class',tx:'Pilates 25 min (Tue)',sx:'Add bodyweight squats at the end'},
+    {id:'2c',ty:'cardio',tx:'Hike 45–60 min (Wed)',sx:'Moderate trail — your long effort this week'},
+    {id:'2d',ty:'class',tx:'Pilates 25 min — upper body focus (Fri)',sx:''},
+    {id:'2e',ty:'cardio',tx:'Jog/walk 30 min (Sat)',sx:'Try one longer continuous jog stretch'},
+    {id:'2f',ty:'habit',tx:'Drink 80+ oz water every day this week',sx:'Carry a big bottle everywhere'},
+  ]},
+  {n:3,ph:'1',d:'May 22–28',t:'Gym orientation',g:'Get comfortable. Try one class. Keep it short and fun.',c:'Gym opens · no pressure',tasks:[
+    {id:'3a',ty:'cardio',tx:'Treadmill walk/jog 20 min',sx:'Explore the gym, find where everything is'},
+    {id:'3b',ty:'class',tx:'Try one class — cycling or Zumba',sx:'Full permission to feel awkward — everyone does'},
+    {id:'3c',ty:'strength',tx:'Full body machines circuit 30 min',sx:'Light weight — ask staff for help if needed'},
+    {id:'3d',ty:'class',tx:'Pilates class or mat session',sx:'Core + flexibility focus'},
+    {id:'3e',ty:'cardio',tx:'Elliptical 25 min (Sat)',sx:'Easy, steady pace'},
+    {id:'3f',ty:'habit',tx:'Pack gym bag the night before each session',sx:'Bag ready = way more likely to go'},
+  ]},
+  {n:4,ph:'1',d:'May 29–Jun 4',t:'Work schedule adjustment',g:'Find your after-work rhythm. 4 days. Schedule is the whole goal.',c:'8–5 job starts Jun 1',tasks:[
+    {id:'4a',ty:'cardio',tx:'Gym after work — cardio 30 min (Mon)',sx:'First after-work session ever'},
+    {id:'4b',ty:'class',tx:'Evening class Wed — Zumba or cycling',sx:''},
+    {id:'4c',ty:'strength',tx:'Full body machines 35 min (Thu)',sx:'Light to moderate weight'},
+    {id:'4d',ty:'cardio',tx:'Morning gym session 45 min (Sat)',sx:'Longer weekend anchor session'},
+    {id:'4e',ty:'nutrition',tx:'Sunday meal prep for the whole week',sx:'Protein + grain + veggies ready to grab'},
+    {id:'4f',ty:'habit',tx:'Put your next 3 gym days in your calendar',sx:'Treat them like work appointments'},
+  ]},
+  {n:5,ph:'2',d:'Jun 5–11',t:'Intro to strength training',g:'Add structured lower + upper body days. 4 consistent days.',c:'Gym · 8–5 job',tasks:[
+    {id:'5a',ty:'strength',tx:'Lower body: squats, leg press, lunges (Mon)',sx:'Machines, 3 sets each, light weight'},
+    {id:'5b',ty:'class',tx:'Cardio class of choice (Tue)',sx:'Cycling, Zumba, or pilates'},
+    {id:'5c',ty:'strength',tx:'Upper body: chest press, rows, lat pulldown (Thu)',sx:'Machines, 3 sets each'},
+    {id:'5d',ty:'cardio',tx:'Treadmill 30–35 min steady (Sat)',sx:'10k training: try a longer jog stretch'},
+    {id:'5e',ty:'nutrition',tx:'Hit 100g+ protein every day this week',sx:'Eggs, Greek yogurt, chicken, beans'},
+    {id:'5f',ty:'habit',tx:'Log one weight used in your journal',sx:'Tracking strength progress feels great'},
+  ]},
+  {n:6,ph:'2',d:'Jun 12–18',t:'Settle into the routine',g:'4 strong days. Same structure, slightly more effort.',c:'Gym · building momentum',tasks:[
+    {id:'6a',ty:'strength',tx:'Lower body (Mon) — try slightly more weight',sx:''},
+    {id:'6b',ty:'class',tx:'Class (Tue) — your favorite',sx:'Keep fun in the schedule always'},
+    {id:'6c',ty:'strength',tx:'Upper body (Thu) — progress one exercise 5 lbs',sx:''},
+    {id:'6d',ty:'cardio',tx:'Treadmill 35 min (Sat)',sx:'Jog more continuously than last week'},
+    {id:'6e',ty:'nutrition',tx:'Meal prep Sunday — keep it simple',sx:''},
+    {id:'6f',ty:'habit',tx:'Collect your week 4 milestone reward!',sx:'You planned this — now enjoy it'},
+  ]},
+  {n:7,ph:'2',d:'Jun 19–25',t:'Push to 5 days',g:'Add a 5th active day. Full body circuit joins the rotation.',c:'Gym · building momentum',tasks:[
+    {id:'7a',ty:'strength',tx:'Lower body (Mon)',sx:'Add one dumbbell move e.g. dumbbell lunges'},
+    {id:'7b',ty:'class',tx:'Cardio class (Tue) — cycling or HIIT',sx:''},
+    {id:'7c',ty:'strength',tx:'Upper body (Wed)',sx:'Progress weights slightly again'},
+    {id:'7d',ty:'class',tx:'Pilates or yoga (Thu)',sx:'Active recovery — flexibility focus'},
+    {id:'7e',ty:'strength',tx:'Full body circuit (Fri) — 40 min',sx:'Compound moves, moderate pace'},
+    {id:'7f',ty:'habit',tx:'Weigh in once (same time, same day)',sx:'Also note energy and how clothes fit'},
+  ]},
+  {n:8,ph:'2',d:'Jun 26–Jul 2',t:'Two months in!',g:'5 days. Recognize how far you have actually come.',c:'Gym · 2-month milestone',tasks:[
+    {id:'8a',ty:'strength',tx:'Lower body (Mon)',sx:''},
+    {id:'8b',ty:'class',tx:'Fun class (Tue) — Zumba or dance',sx:'Reward yourself with your favorite'},
+    {id:'8c',ty:'strength',tx:'Upper body (Wed)',sx:''},
+    {id:'8d',ty:'class',tx:'Class or pilates (Sat)',sx:''},
+    {id:'8e',ty:'cardio',tx:'Treadmill run 40 min',sx:'10k training: aim for 20+ min continuous jog'},
+    {id:'8f',ty:'habit',tx:'Write week 8 reflection in journal',sx:'Compare energy and mood to week 1'},
+  ]},
+  {n:9,ph:'2',d:'Jul 3–9',t:'Planned deload — rest on purpose',g:'Pull back to 3–4 days intentionally. Prevent burnout.',c:'July 4th holiday week',tasks:[
+    {id:'9a',ty:'cardio',tx:'Light cardio 30 min (Mon)',sx:'Easy effort only, no pushing'},
+    {id:'9b',ty:'class',tx:'Pilates or yoga (Tue)',sx:'Flexibility and stretch focus'},
+    {id:'9c',ty:'strength',tx:'Light full body session (Fri)',sx:'Lighter weights, higher reps'},
+    {id:'9d',ty:'class',tx:'One fun class on the weekend',sx:'Your favorite — keep it enjoyable'},
+    {id:'9e',ty:'nutrition',tx:'Enjoy July 4th without guilt',sx:"One event doesn't undo your progress"},
+    {id:'9f',ty:'habit',tx:'Plan your week 12 milestone reward',sx:'Something exciting to look forward to'},
+  ]},
+  {n:10,ph:'2',d:'Jul 10–16',t:'Back on it — refreshed',g:'Return to 5 days with renewed energy after the deload.',c:'Gym · back to full schedule',tasks:[
+    {id:'10a',ty:'strength',tx:'Lower body (Mon)',sx:''},
+    {id:'10b',ty:'class',tx:'Cardio class (Tue)',sx:''},
+    {id:'10c',ty:'strength',tx:'Upper body (Wed)',sx:"Try a weight you've been stuck on"},
+    {id:'10d',ty:'class',tx:'Pilates (Thu)',sx:''},
+    {id:'10e',ty:'cardio',tx:'Treadmill run 40–45 min (Sat)',sx:'10k training: aim for 25+ min continuous'},
+    {id:'10f',ty:'habit',tx:'Drink water before every meal this week',sx:'16 oz before each meal reduces hunger'},
+  ]},
+  {n:11,ph:'3',d:'Jul 17–23',t:'Peak intensity begins',g:"5–6 days. You're genuinely strong now — push a little harder.",c:'Gym · final stretch begins',tasks:[
+    {id:'11a',ty:'strength',tx:'Lower body — progressed weights (Mon)',sx:"You've been doing this 6 weeks straight"},
+    {id:'11b',ty:'class',tx:'Cycling or HIIT class (Tue)',sx:''},
+    {id:'11c',ty:'strength',tx:'Upper body + cables or dumbbells (Wed)',sx:'Add one free weight move this week'},
+    {id:'11d',ty:'class',tx:'Pilates or yoga (Thu)',sx:'Active recovery day'},
+    {id:'11e',ty:'strength',tx:'Full body + core (Fri) — 45 min',sx:'Compound movements, strong effort'},
+    {id:'11f',ty:'cardio',tx:'Long treadmill run (Sat)',sx:'10k training: try 30 min continuous jog'},
+  ]},
+  {n:12,ph:'3',d:'Jul 24–30',t:'Your strongest week yet',g:'6 active days. Track every weight you lift.',c:'Gym · peak phase',tasks:[
+    {id:'12a',ty:'strength',tx:'Lower body (Mon)',sx:'Log every single weight used'},
+    {id:'12b',ty:'class',tx:'Favorite class (Tue)',sx:'Milestone week — make it celebratory'},
+    {id:'12c',ty:'strength',tx:'Upper body (Wed)',sx:''},
+    {id:'12d',ty:'class',tx:'Yoga or pilates (Thu)',sx:''},
+    {id:'12e',ty:'strength',tx:'Full body circuit (Fri)',sx:''},
+    {id:'12f',ty:'habit',tx:'Collect your week 12 milestone reward!',sx:'You planned and earned this — enjoy it'},
+  ]},
+  {n:13,ph:'3',d:'Jul 31–Aug 6',t:'Cementing the lifestyle',g:'5–6 days. Plan your fall schedule before this week ends.',c:'Gym · penultimate week',tasks:[
+    {id:'13a',ty:'strength',tx:'Lower body (Mon)',sx:''},
+    {id:'13b',ty:'class',tx:'Class (Tue) — your fave',sx:"You've fully earned it"},
+    {id:'13c',ty:'strength',tx:'Upper body (Wed)',sx:''},
+    {id:'13d',ty:'cardio',tx:'Cardio or rest (Thu)',sx:'Listen to your body today'},
+    {id:'13e',ty:'strength',tx:'Full body (Fri)',sx:''},
+    {id:'13f',ty:'habit',tx:'Write out your fall fitness plan',sx:'A next goal prevents the post-summer drop'},
+  ]},
+  {n:14,ph:'3',d:'Aug 7–14',t:'Final week — finish strong',g:'Reflect on the whole journey. You built something real.',c:'Gym · final week',tasks:[
+    {id:'14a',ty:'strength',tx:'Lower body (Mon)',sx:''},
+    {id:'14b',ty:'class',tx:'Class — make it celebratory (Tue)',sx:''},
+    {id:'14c',ty:'strength',tx:'Upper body (Wed)',sx:''},
+    {id:'14d',ty:'cardio',tx:'Long run or class (Sat)',sx:'10k training: 35+ min continuous run'},
+    {id:'14e',ty:'habit',tx:'Write your Aug 14 final reflection',sx:'Energy, strength, mood vs May 8'},
+    {id:'14f',ty:'habit',tx:'Compare week 1 journal entry to today',sx:'One word then. How many words now?'},
+  ]},
+];
+
+var SFTIPS=[
+  {cat:'Weight goal reality check',txt:'Healthy fat loss is 0.5–1 lb/week. A realistic 14-week target is 12–15 lbs. Habits will always outperform obsessing over the scale.'},
+  {cat:'Never miss twice',txt:"Missing one workout is an accident. Missing two is the start of a new habit. If you skip, the only rule is: don't skip the next one."},
+  {cat:"Motivation is unreliable — systems aren't",txt:'Pack your gym bag the night before. Schedule gym days like work appointments. Remove every friction point. Systems beat willpower every time.'},
+  {cat:'Classes are your superpower',txt:'Zumba, cycling, pilates — a workout you enjoy is infinitely more sustainable than the "correct" one you dread. Build your schedule around classes first.'},
+  {cat:'Eating out',txt:"Apply one small upgrade per meal: protein-forward entrée, swap fries once, skip the bread. Don't eliminate — just one small tweak per outing."},
+  {cat:'Keep your coffees',txt:"Just downsize one step or swap one syrup pump for sugar-free. Saves 100–200 cal/day without feeling deprived. Don't cut what you love."},
+  {cat:'Identity over goals',txt:'"I am someone who takes care of my body" outlasts any goal. Every workout — even a short, easy one — is a vote for that identity.'},
+  {cat:'10k training',txt:"Walk/jog intervals from week 1 build your base safely. By August you should run 30+ min continuously — you're on track from day one."},
+  {cat:'Plan milestone rewards now',txt:'Pick a non-food reward at weeks 4, 8, and 12. New workout outfit, spa day, concert tickets. Something to look forward to makes the hard weeks worth it.'},
+];
+
+var SFC={}, SFN=[], SFPH='all', SFOW=null;
+
+(function(){
+  var s=new Date('2026-05-08'),now=new Date();
+  var d=Math.floor((now-s)/(7*24*60*60*1000));
+  SFOW=Math.max(1,Math.min(d+1,14));
+})();
+
+// --- Persistence helpers (localStorage) ---
+function sfSaveChecks(){
+  try{ localStorage.setItem('sft-checks', JSON.stringify(SFC)); }catch(e){}
+}
+function sfSaveNotes(){
+  try{ localStorage.setItem('sft-notes', JSON.stringify(SFN)); }catch(e){}
+}
+function sfLoad(){
+  try{ var c=localStorage.getItem('sft-checks'); if(c) SFC=JSON.parse(c); }catch(e){}
+  try{ var n=localStorage.getItem('sft-notes'); if(n) SFN=JSON.parse(n); }catch(e){}
+  sfBuild();
+}
+
+var SFDC={cardio:'#c97b5a',strength:'#7a9e7e','class':'#a98bc0',nutrition:'#d4a843',habit:'#5a9ec9'};
+
+function sfTot(){return SFW.reduce(function(a,w){return a+w.tasks.length;},0);}
+function sfDone(){return Object.keys(SFC).filter(function(k){return SFC[k];}).length;}
+
+function sfUpStats(){
+  var tot=sfTot(),dn=sfDone(),pct=Math.round(dn/tot*100);
+  document.getElementById('sf-pf').style.width=pct+'%';
+  document.getElementById('sf-pp').textContent=pct+'% complete';
+  document.getElementById('sf-pc').textContent=dn+' of '+tot+' tasks';
+  document.getElementById('sf-sc').textContent=dn;
+  var st=0;
+  for(var i=0;i<SFW.length;i++){if(SFW[i].tasks.every(function(t){return SFC[t.id];}))st++;else break;}
+  document.getElementById('sf-ss').textContent=st+(st>0?'🔥':'');
+}
+
+function sfBuild(){
+  var el=document.getElementById('sf-wl');
+  el.innerHTML='';
+  var curN=SFOW;
+  var filtered=SFPH==='all'?SFW:SFW.filter(function(w){return w.ph===SFPH;});
+  filtered.forEach(function(w){
+    var ad=w.tasks.every(function(t){return SFC[t.id];});
+    var ic=w.n===curN;
+    var isOpen=SFOW===w.n||ad;
+    var div=document.createElement('div');
+    div.className='sf-wcard'+(ic?' curwk':'')+(isOpen?' open':'');
+    div.id='sfw'+w.n;
+    var bc=ad?'doneb':(ic?'curb':'');
+    var nv=ad?'✓':w.n;
+    var dots='';
+    w.tasks.forEach(function(t){dots+='<div class="sf-wdot'+(SFC[t.id]?' on':'')+'"></div>';});
+    var rows='';
+    w.tasks.forEach(function(t,ti){
+      var last=ti===w.tasks.length-1;
+      rows+='<div class="sf-titem'+(SFC[t.id]?' done':'')+'" id="sfti'+t.id+'" onclick="sfTogT(\''+t.id+'\','+w.n+',event)" style="border-bottom:'+(last?'none':'1px solid rgba(122,158,126,0.1)')+'">'+
+        '<div class="sf-tdot" style="background:'+(SFDC[t.ty]||'#a39690')+'"></div>'+
+        '<div class="sf-tchk"><span class="sf-ckicon">✓</span></div>'+
+        '<div class="sf-tcont"><div class="sf-ttxt">'+t.tx+'</div>'+(t.sx?'<div class="sf-tstxt">'+t.sx+'</div>':'')+'</div>'+
+      '</div>';
+    });
+    div.innerHTML=
+      '<div class="sf-whdr" onclick="sfTogW('+w.n+')">'+
+        '<div class="sf-badge '+bc+'"><div class="sf-bnlbl">Wk</div><div class="sf-bnval">'+nv+'</div></div>'+
+        '<div class="sf-winfo"><div class="sf-wtitle">'+w.d+' · '+w.t+'</div><div class="sf-wsub">'+w.g+'</div><div class="sf-wdots">'+dots+'</div></div>'+
+        '<div class="sf-wchev">&#8964;</div>'+
+      '</div>'+
+      '<div class="sf-wbody">'+
+        '<div class="sf-gbanner"><div class="sf-glbl">This week\'s goal</div><div class="sf-gtxt">'+w.g+'</div><div class="sf-ctag">Phase '+w.ph+' · '+w.c+'</div></div>'+
+        '<div class="sf-tsec"><div class="sf-tlbl">Check off your achievements</div>'+rows+'</div>'+
+      '</div>';
+    el.appendChild(div);
+  });
+  sfUpStats();
+}
+
+function sfTogW(n){
+  var c=document.getElementById('sfw'+n);
+  if(c){
+    c.classList.toggle('open');
+    if(c.classList.contains('open'))SFOW=n;
+  }
+}
+
+function sfTogT(id,wn,e){
+  SFC[id]=!SFC[id];
+  var item=document.getElementById('sfti'+id);
+  item.classList.toggle('done',!!SFC[id]);
+  if(SFC[id]){
+    var rect=item.getBoundingClientRect();
+    sfCf(rect.left+rect.width/2,rect.top);
+    var wk=SFW.find(function(w){return w.n===wn;});
+    if(wk&&wk.tasks.every(function(t){return SFC[t.id];}))setTimeout(sfBigCf,300);
+  }
+  var card=document.getElementById('sfw'+wn);
+  if(card){
+    var wk=SFW.find(function(w){return w.n===wn;});
+    if(wk){
+      var dots=card.querySelectorAll('.sf-wdot');
+      wk.tasks.forEach(function(t,i){dots[i]&&dots[i].classList.toggle('on',!!SFC[t.id]);});
+      var ad=wk.tasks.every(function(t){return SFC[t.id];});
+      var badge=card.querySelector('.sf-badge');
+      var nv=card.querySelector('.sf-bnval');
+      if(badge)badge.className='sf-badge'+(ad?' doneb':'');
+      if(nv)nv.textContent=ad?'✓':wn;
+    }
+  }
+  sfSaveChecks();
+  sfUpStats();
+}
+
+function sfCf(x,y){
+  var cl=['#7a9e7e','#c97b5a','#a98bc0','#d4a843','#5a9ec9','#b8d4bb'];
+  for(var i=0;i<10;i++){
+    (function(){
+      var p=document.createElement('div');
+      p.className='sf-cfp';
+      p.style.left=(x+(Math.random()-.5)*60)+'px';
+      p.style.top=y+'px';
+      p.style.background=cl[Math.floor(Math.random()*cl.length)];
+      p.style.animationDuration=(0.8+Math.random()*0.5)+'s';
+      p.style.animationDelay=(Math.random()*0.1)+'s';
+      document.body.appendChild(p);
+      setTimeout(function(){p.parentNode&&p.parentNode.removeChild(p);},1500);
+    })();
+  }
+}
+function sfBigCf(){
+  var cl=['#7a9e7e','#c97b5a','#a98bc0','#d4a843','#5a9ec9','#b8d4bb'];
+  for(var i=0;i<28;i++){
+    (function(){
+      var p=document.createElement('div');
+      p.className='sf-cfp';
+      p.style.left=(Math.random()*window.innerWidth)+'px';
+      p.style.top=(Math.random()*100)+'px';
+      p.style.background=cl[Math.floor(Math.random()*cl.length)];
+      p.style.width=(5+Math.random()*6)+'px';
+      p.style.height=(5+Math.random()*6)+'px';
+      p.style.animationDuration=(1+Math.random()*0.6)+'s';
+      p.style.animationDelay=(Math.random()*0.3)+'s';
+      document.body.appendChild(p);
+      setTimeout(function(){p.parentNode&&p.parentNode.removeChild(p);},2000);
+    })();
+  }
+}
+
+function sfph(ph,btn){
+  SFPH=ph;
+  document.querySelectorAll('.sf-ppill').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');
+  sfBuild();
+}
+
+function sfTab(v,btn){
+  ['plan','journal','tips'].forEach(function(id){document.getElementById('sv-'+id).classList.remove('on');});
+  document.querySelectorAll('.sf-nbtn').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('sv-'+v).classList.add('on');
+  btn.classList.add('on');
+  if(v==='tips')sfBuildTips();
+  if(v==='journal')sfRnotes();
+}
+
+function sfBuildTips(){
+  var el=document.getElementById('sf-tips-list');
+  if(el.children.length)return;
+  SFTIPS.forEach(function(tip){
+    var d=document.createElement('div');
+    d.className='sf-tipcard';
+    d.innerHTML='<div class="sf-tipcat">'+tip.cat+'</div><div class="sf-tiptxt">'+tip.txt+'</div>';
+    el.appendChild(d);
+  });
+}
+
+function sfRnotes(){
+  var el=document.getElementById('sf-jl');
+  el.innerHTML='';
+  if(!SFN.length){el.innerHTML='<div style="padding:24px;text-align:center;color:#a39690;font-size:12px;">No entries yet. Add your first one below.</div>';return;}
+  SFN.forEach(function(note,i){
+    var d=document.createElement('div');
+    d.className='sf-ncard';
+    d.innerHTML='<div class="sf-ntop"><div class="sf-ndate">'+note.date+'</div><div class="sf-ndel" onclick="sfDelN('+i+')">&#215;</div></div>'+
+      '<textarea class="sf-textarea" placeholder="What did you do? How did you feel?" onchange="sfUpdN('+i+',this.value)">'+note.text+'</textarea>';
+    el.appendChild(d);
+  });
+}
+function sfAddNote(){
+  var now=new Date();
+  var ds=now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  SFN.unshift({date:ds,text:''});
+  sfSaveNotes();
+  sfRnotes();
+  setTimeout(function(){var ta=document.querySelector('.sf-textarea');if(ta)ta.focus();},80);
+}
+function sfUpdN(i,v){if(SFN[i]){SFN[i].text=v;sfSaveNotes();}}
+function sfDelN(i){SFN.splice(i,1);sfSaveNotes();sfRnotes();}
+
+// sfLoad() handles initial build
+sfLoad();
+</script>
+
+ </body>
+</html>
